@@ -1,4 +1,4 @@
-# Lab 02. PX-Central을 이용한 Portworx Spec 생성
+# Lab 03. PX-Central을 이용한 Portworx Spec 생성
 
 ### Task 1. Portworx Central 계정 만들기
 
@@ -149,4 +149,4 @@
 
 ---
 
-[처음으로](../../README.md) | [이전 LAB](../lab-01/kubernetes-cluster.md) | [다음 LAB](../lab-03/portworx-deployment.md)
+[처음으로](../../README.md) | [이전 LAB](../lab-02/kubernetes-addons.md) | [다음 LAB](../lab-04/portworx-deployment.md)

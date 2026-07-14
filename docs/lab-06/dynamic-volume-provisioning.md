@@ -1,4 +1,4 @@
-# Lab 05. Dynamic Volume Provisioning
+# Lab 06. Dynamic Volume Provisioning
 
 ### Task 1. Portworx StorageClass 생성
 
@@ -241,4 +241,4 @@ pxctl1 volume inspect <pvc-volume-name>
 
 ---
 
-[처음으로](../../README.md) | [이전 LAB](../lab-04/portworx-operations.md)
+[처음으로](../../README.md) | [이전 LAB](../lab-05/portworx-operations.md)

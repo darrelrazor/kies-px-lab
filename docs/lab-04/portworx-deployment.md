@@ -1,4 +1,4 @@
-﻿# Lab 03. 쿠버네티스 클러스터에 Portworx 배포
+# Lab 04. 쿠버네티스 클러스터에 Portworx 배포
 
 ### Task 1. Portworx Operator 배포
 
@@ -121,4 +121,4 @@ storkctl1 version
 
 ---
 
-[처음으로](../../README.md) | [이전 LAB](../lab-02/px-central-spec-generator.md) | [다음 LAB](../lab-04/portworx-operations.md)
+[처음으로](../../README.md) | [이전 LAB](../lab-03/px-central-spec-generator.md) | [다음 LAB](../lab-05/portworx-operations.md)

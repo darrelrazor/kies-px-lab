@@ -1,4 +1,4 @@
-# Lab 04. Portworx 기본 운영
+# Lab 05. Portworx 기본 운영
 
 ### Task 1. Portworx 클러스터 정보 조회
 
@@ -48,4 +48,4 @@ pxctl1 volume inspect vol1
 
 ---
 
-[처음으로](../../README.md) | [이전 LAB](../lab-03/portworx-deployment.md) | [다음 LAB](../lab-05/dynamic-volume-provisioning.md)
+[처음으로](../../README.md) | [이전 LAB](../lab-04/portworx-deployment.md) | [다음 LAB](../lab-06/dynamic-volume-provisioning.md)

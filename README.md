@@ -13,11 +13,12 @@
 | LAB | 내용 |
 | --- | --- |
 | [Lab 01](docs/lab-01/kubernetes-cluster.md) | 쿠버네티스 클러스터 구성 |
-| [Lab 02](docs/lab-02/px-central-spec-generator.md) | PX-Central을 이용한 Portworx Spec 생성 |
-| [Lab 03](docs/lab-03/portworx-deployment.md) | 쿠버네티스 클러스터에 Portworx 배포 |
-| [Lab 04](docs/lab-04/portworx-operations.md) | Portworx 기본 운영 |
-| [Lab 05](docs/lab-05/dynamic-volume-provisioning.md) | Dynamic Volume Provisioning |
-| Lab 06 | Pure FlashArray 연동 |
+| [Lab 02](docs/lab-02/kubernetes-addons.md) | 쿠버네티스 애플리케이션 및 네트워크 구성 |
+| [Lab 03](docs/lab-03/px-central-spec-generator.md) | PX-Central을 이용한 Portworx Spec 생성 |
+| [Lab 04](docs/lab-04/portworx-deployment.md) | 쿠버네티스 클러스터에 Portworx 배포 |
+| [Lab 05](docs/lab-05/portworx-operations.md) | Portworx 기본 운영 |
+| [Lab 06](docs/lab-06/dynamic-volume-provisioning.md) | Dynamic Volume Provisioning |
+| Lab 07 | Pure FlashArray 연동 |
 
 
 ## 실습 환경
@@ -119,5 +120,4 @@
 
 ## 작성자
 한국정보공학 이상진 `<sjlee@kies.co.kr>`
-
 

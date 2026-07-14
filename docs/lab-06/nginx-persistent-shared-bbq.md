@@ -1,4 +1,4 @@
-# Lab 05 후보. NGINX 영구·공유 볼륨과 Portworx BBQ
+# Lab 06 후보. NGINX 영구·공유 볼륨과 Portworx BBQ
 
 기존 LAB 05 리소스와 겹치지 않도록 이 문서에서는 `px-nginx-lab`과 `portworx-bbq` 네임스페이스만 사용합니다.
 
@@ -351,4 +351,4 @@ kubectl delete storageclass px-nginx-rwx
 
 ---
 
-[처음으로](../../README.md) | [기존 LAB 05](./dynamic-volume-provisioning.md)
+[처음으로](../../README.md) | [기존 LAB 06](./dynamic-volume-provisioning.md)
