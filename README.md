@@ -18,7 +18,7 @@
 | [Lab 04](docs/lab-04/portworx-deployment.md) | 쿠버네티스 클러스터에 Portworx 배포 |
 | [Lab 05](docs/lab-05/portworx-operations.md) | Portworx 기본 운영 |
 | [Lab 06](docs/lab-06/dynamic-volume-provisioning.md) | Dynamic Volume Provisioning |
-| Lab 07 | Pure FlashArray 연동 |
+| [Lab 07](docs/lab-07/flasharray-integration.md) | Pure FlashArray 연동 |
 
 
 ## 실습 환경
@@ -120,4 +120,3 @@
 
 ## 작성자
 한국정보공학 이상진 `<sjlee@kies.co.kr>`
-
