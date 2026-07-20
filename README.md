@@ -17,7 +17,7 @@
 | [Lab 03](docs/lab-03/px-central-spec-generator.md) | PX-Central을 이용한 Portworx Spec 생성 |
 | [Lab 04](docs/lab-04/portworx-deployment.md) | 쿠버네티스 클러스터에 Portworx 배포 |
 | [Lab 05](docs/lab-05/portworx-operations.md) | Portworx 기본 운영 |
-| [Lab 06](docs/lab-06/dynamic-volume-provisioning.md) | Dynamic Volume Provisioning |
+| [Lab 06](docs/lab-06/nginx-lab02-rwo-rwx-bbq.md) | NGINX 영구·공유 볼륨과 Portworx BBQ |
 | [Lab 07](docs/lab-07/flasharray-integration.md) | Pure FlashArray 연동 |
 
 

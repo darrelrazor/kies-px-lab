@@ -298,4 +298,4 @@ kubectl delete -f ~/flasharray-sc.yaml
 
 ---
 
-[처음으로](../../README.md) | [이전 LAB](../lab-06/dynamic-volume-provisioning.md)
+[처음으로](../../README.md) | [이전 LAB](../lab-06/nginx-lab02-rwo-rwx-bbq.md)

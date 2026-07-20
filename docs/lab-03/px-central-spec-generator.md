@@ -82,7 +82,7 @@
 | Select your environment | On Premises |
 | Select type of OnPrem storage | Manually specify disks |
 | PX-StoreV2 | 체크 해제 |
-| Drive/Device | `/dev/sdb` (100GB) |
+| Drive/Device | `/dev/sdb` (50GB) |
 | Journal Device | None |
 | Skip KVDB device | 체크 |
 | KVDB device | `/dev/sdb` |

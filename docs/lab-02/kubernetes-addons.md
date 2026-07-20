@@ -24,6 +24,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: nginx-server
+  namespace: lab
   labels:
     app: server
 spec:
@@ -47,7 +48,7 @@ spec:
 3. 애플리케이션을 배포합니다.
 
 ```bash
-kubectl apply -f ~/nginx-app.yaml --namespace=lab
+kubectl apply -f ~/nginx-app.yaml
 ```
 
 4. Service YAML을 생성합니다.
@@ -61,6 +62,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: nginx-service
+  namespace: lab
   labels:
     app: server
 spec:
@@ -75,6 +77,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: nginx-service-node
+  namespace: lab
   labels:
     app: server
 spec:
@@ -91,7 +94,7 @@ spec:
 5. 서비스를 배포하고 상태를 확인합니다.
 
 ```bash
-kubectl apply -f ~/nginx-svc.yaml --namespace=lab
+kubectl apply -f ~/nginx-svc.yaml
 kubectl get all -n lab
 ```
 
@@ -168,6 +171,13 @@ EOF
 ```
 kubectl apply -f metallb.yaml
 ```
+
+4. 서비스 확인
+```
+kubectl get ipaddresspool -A
+kubectl get l2advertisement -A
+```
+
 ![alt text](images/image-16.png)
 > Note: `192.168.102.xxx/32`의 `xxx`를 자신의 VIP로 변경합니다.
 
@@ -200,6 +210,7 @@ kubectl get gatewayclass
 ![alt text](images/image-18.png)
 
 4. HTTPS 접근용 자체 서명 인증서를 생성합니다.
+> Note: `xx`를 자신의 Lab 번호로 변경합니다.
 
 ```bash
 openssl req -x509 -nodes -newkey rsa:2048 -days 365 \
@@ -215,7 +226,7 @@ openssl x509 -in /tmp/px.lab-ngf.crt -noout -subject -issuer -dates -ext subject
 ```
 ![alt text](images/image-19.png)
 
-> Note: `xx`를 자신의 Lab 번호로 변경합니다.
+
 
 5. Secret을 생성합니다.
 
@@ -227,12 +238,14 @@ kubectl -n nginx-gateway create secret tls px.lab-ngf-tls \
 ```
 ```
 kubectl get secret -n nginx-gateway
+kubectl describe secret -n nginx-gateway px.lab-ngf-tls
 ```
 ![alt text](images/image-20.png)
 
 
 
 6. Gateway를 생성합니다.
+> Note: Gateway YAML의 `xx`도 자신의 Lab 번호로 변경합니다.
 
 ```bash
 cat <<'EOF' > ngf-gateway.yaml
@@ -269,11 +282,17 @@ EOF
 kubectl apply -f ngf-gateway.yaml
 ```
 
-> Note: Gateway YAML의 `xx`도 자신의 Lab 번호로 변경합니다.
+gateway 서비스 확인
+```
+kubectl get gateway -n nginx-gateway
+kubectl get svc -n nginx-gateway
+```
+
 
 ![alt text](images/image-21.png)
 
 7. HTTPRoute를 생성합니다.
+> Note: HTTPRoute YAML의 `xx`도 자신의 Lab 번호로 변경합니다.
 
 ```bash
 cat <<'EOF' > nginx-route.yaml
@@ -306,7 +325,7 @@ EOF
 kubectl apply -f nginx-route.yaml
 ```
 
-> Note: HTTPRoute YAML의 `xx`도 자신의 Lab 번호로 변경합니다.
+
 
 ![alt text](images/image-22.png)
 
