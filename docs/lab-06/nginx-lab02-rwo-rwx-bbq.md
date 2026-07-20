@@ -1,8 +1,6 @@
-# Lab 06. LAB 02 NGINX를 이용한 영구·공유 볼륨과 Portworx BBQ
+# Lab 06. Dynamic Volume Provisioning
 
-Task 1은 LAB 02에서 생성한 `nginx-server` Deployment, `nginx-service` Service와 `nginx-route` HTTPRoute를 그대로 사용합니다. Task 2는 RWO 애플리케이션을 유지한 채 별도의 RWX Deployment, Service와 HTTPRoute를 추가합니다.
 
-> Note: `app: server` 라벨과 `lab` 네임스페이스를 변경하면 기존 Service와 HTTPRoute가 NGINX Pod를 찾지 못합니다.
 
 ### Task 1. 기존 NGINX에 RWO 영구 볼륨 연결
 
