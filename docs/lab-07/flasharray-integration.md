@@ -50,46 +50,34 @@ systemctl status iscsid multipathd --no-pager
 
 > Note: `user_friendly_names no` 설정을 사용하면 장치가 `mpatha`가 아닌 WWID 이름으로 표시됩니다.
 
-### Task 2. FlashArray Host와 iSCSI 연결 구성
+### Task 2. FlashArray iSCSI 연결 준비
 
-1. FlashArray 관리 화면의 **Storage > Hosts**에서 각 워커 노드의 Host를 생성하고 Task 1에서 확인한 IQN을 등록합니다.
+1. Task 1에서 확인한 IQN이 워커 노드마다 서로 다른지 비교합니다.
 
-<p align="center"><img src="images/flasharray-host-iqn.png" alt="FlashArray Host IQN 등록 화면" width="900"></p>
+> Note: FlashArray Direct Access에서는 Portworx가 애플리케이션 Pod의 볼륨 연결 상태에 따라 FlashArray Host와 IQN 매핑을 동적으로 관리합니다. FlashArray 관리 화면에서 Host 또는 Host Group을 미리 생성하지 않습니다.
 
-2. 워커 노드를 하나의 Host Group에 추가합니다.
-
-<p align="center"><img src="images/flasharray-host-group.png" alt="FlashArray Host Group 화면" width="900"></p>
-
-3. 각 워커 노드에서 FlashArray iSCSI 데이터 포털을 검색합니다.
-
-아래 IP는 실습 환경의 FlashArray iSCSI IP로 변경합니다.
+2. 각 워커 노드에서 FlashArray iSCSI 데이터 포털을 검색합니다.
 
 ```bash
-FA_ISCSI_1="10.10.10.11"
-FA_ISCSI_2="10.10.10.12"
-FA_ISCSI_3="10.10.10.13"
-FA_ISCSI_4="10.10.10.14"
-
-iscsiadm -m discovery -t sendtargets -p "$FA_ISCSI_1"
-iscsiadm -m discovery -t sendtargets -p "$FA_ISCSI_2"
-iscsiadm -m discovery -t sendtargets -p "$FA_ISCSI_3"
-iscsiadm -m discovery -t sendtargets -p "$FA_ISCSI_4"
+iscsiadm -m discovery -t sendtargets -p 10.10.10.11
 ```
 
-4. 검색된 iSCSI Target에 로그인하고 세션을 확인합니다.
+3. 검색된 iSCSI Target에 로그인하고 세션을 확인합니다.
 
 ```bash
 iscsiadm -m node --op update -n node.startup -v automatic
-iscsiadm -m node --login
+iscsiadm -m node -l
 iscsiadm -m session
 multipath -ll
 ```
+![alt text](images/image.png)
+
 
 > Note: 아직 FlashArray 볼륨을 생성하지 않았다면 `multipath -ll`에 새 장치가 표시되지 않을 수 있습니다.
 
 ### Task 3. FlashArray API Token과 Portworx Secret 생성
 
-1. FlashArray 관리 화면에서 Portworx 연동용 사용자를 만들고 API Token을 생성합니다.
+1. FlashArray 관리 화면에서 `Storage Admin` 역할의 Portworx 연동용 사용자를 만들고 API Token을 생성합니다.
 
 > Warning: API Token은 비밀번호와 같은 민감 정보입니다. 문서, 화면 캡처, Git 저장소와 셸 히스토리에 실제 값을 남기지 않습니다.
 
@@ -97,55 +85,57 @@ multipath -ll
 
 ```bash
 kubectl get storagecluster -n portworx
-STC=$(kubectl get storagecluster -n portworx \
-  -o jsonpath='{.items[0].metadata.name}')
-echo "$STC"
 ```
+![alt text](images/image-1.png)
 
-3. StorageCluster에 FlashArray SAN 유형을 추가합니다.
+3. StorageCluster에 FlashArray SAN 유형과 Cloud Provider 자격증명 저장소를 추가합니다.
 
 ```bash
-kubectl edit storagecluster -n portworx "$STC"
+kubectl patch storagecluster \
+  <STORAGECLUSTER_NAME> \
+  -n portworx \
+  --type merge \
+  -p '{"spec":{"secretProviderPerFeature":{"cloudProviderCred":"k8s"},"env":[{"name":"PURE_FLASHARRAY_SAN_TYPE","value":"ISCSI"}]}}'
 ```
 
-기존 `spec.env`가 있으면 아래 항목만 추가합니다.
+> Note: 이 설정이 없으면 FlashArray 자격증명을 Vault에서 조회하려고 시도하면서 `StorageCluster secretsProvider is 'k8s', not 'vault'` 오류가 발생할 수 있습니다. `cloudProviderCred: k8s`를 명시하면 Portworx가 `px-pure-secret`에서 FlashArray API Token을 조회합니다.
 
-```yaml
-spec:
-  env:
-    - name: PURE_FLASHARRAY_SAN_TYPE
-      value: "ISCSI"
+설정이 반영되었는지 확인합니다.
+
+```bash
+kubectl get storagecluster -n portworx <STORAGECLUSTER_NAME> -o yaml \
+  | grep -A2 secretProviderPerFeature
+
+kubectl get storagecluster -n portworx <STORAGECLUSTER_NAME> -o yaml \
+  | grep -A1 PURE_FLASHARRAY_SAN_TYPE
 ```
 
 4. FlashArray 접속 정보를 작성합니다.
 
 ```bash
-vi ~/pure.json
-```
-
-```json
+cat << 'EOF' > pure.json
 {
   "FlashArrays": [
     {
-      "MgmtEndPoint": "FLASHARRAY_MGMT_IP",
-      "APIToken": "PURE_API_TOKEN"
+      "MgmtEndPoint": "192.168.100.231",
+      "APIToken": "<PURE_API_TOKEN>"
     }
   ]
 }
+EOF
 ```
 
 5. `FLASHARRAY_MGMT_IP`와 `PURE_API_TOKEN`을 실제 값으로 변경한 뒤 Kubernetes Secret을 생성합니다.
 
 ```bash
-kubectl create secret generic px-pure-secret \
-  -n portworx \
-  --from-file=pure.json=~/pure.json \
-  --dry-run=client -o yaml | kubectl apply -f -
+kubectl create secret generic px-pure-secret --namespace portworx --from-file=pure.json
 
 kubectl get secret px-pure-secret -n portworx
 rm -f ~/pure.json
 ```
 
+> Note: Kubernetes Secret 방식을 사용할 때 Secret 이름은 반드시 `px-pure-secret`이어야 하며 Portworx와 같은 네임스페이스에 생성해야 합니다. Portworx가 이 Secret을 자동으로 조회하므로 StorageClass에 Secret 이름과 네임스페이스를 별도로 지정하지 않습니다.
+>
 > Note: `kubectl describe secret`은 실제 값 대신 데이터 항목과 크기만 표시합니다.
 
 ### Task 4. Portworx 서비스 재시작
@@ -170,7 +160,7 @@ kubectl get pod -n portworx -l name=portworx -w
 
 ```bash
 pxctl1 status
-kubectl get storagecluster -n portworx "$STC" -o yaml \
+kubectl get storagecluster -n portworx <STORAGECLUSTER_NAME> -o yaml \
   | grep -A2 PURE_FLASHARRAY_SAN_TYPE
 ```
 
@@ -187,10 +177,6 @@ metadata:
 provisioner: pxd.portworx.com
 parameters:
   backend: "pure_block"
-  pure_secret_name: px-pure-secret
-  pure_secret_namespace: portworx
-  repl: "1"
-  fs: "ext4"
 reclaimPolicy: Delete
 volumeBindingMode: Immediate
 allowVolumeExpansion: true
@@ -229,42 +215,55 @@ kubectl get pvc,pv -n fa-test
 
 PVC가 `Bound` 상태가 되고 FlashArray 관리 화면에 10GiB 볼륨이 동적으로 생성되는지 확인합니다.
 
-### Task 6. 테스트 Pod에서 볼륨 확인
+### Task 6. Deployment를 이용한 노드 간 볼륨 이동 확인
 
-1. PVC를 사용하는 NGINX Pod를 생성합니다.
+1. PVC를 사용하는 NGINX Deployment를 생성합니다.
 
 ```bash
-cat <<'EOF' > ~/flasharray-test-pod.yaml
-apiVersion: v1
-kind: Pod
+cat <<'EOF' > ~/flasharray-test-deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
 metadata:
-  name: fa-test-pod
+  name: fa-test
   namespace: fa-test
 spec:
-  containers:
-    - name: nginx
-      image: nginx:alpine
-      volumeMounts:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: fa-test
+  template:
+    metadata:
+      labels:
+        app: fa-test
+    spec:
+      containers:
+        - name: nginx
+          image: nginx:alpine
+          volumeMounts:
+            - name: fa-vol
+              mountPath: /data
+      volumes:
         - name: fa-vol
-          mountPath: /data
-  volumes:
-    - name: fa-vol
-      persistentVolumeClaim:
-        claimName: test-fa
+          persistentVolumeClaim:
+            claimName: test-fa
 EOF
 
-kubectl apply -f ~/flasharray-test-pod.yaml
+kubectl apply -f ~/flasharray-test-deployment.yaml
 kubectl wait -n fa-test --for=condition=Ready \
-  pod/fa-test-pod --timeout=180s
-kubectl get pod -n fa-test -o wide
+  pod -l app=fa-test --timeout=180s
+kubectl get pod -n fa-test -l app=fa-test -o wide
 ```
 
-2. 테스트 파일을 생성하고 확인합니다.
+출력에서 현재 `<POD_NAME>`과 `<CURRENT_NODE>`를 확인합니다.
+
+2. 현재 Pod에 테스트 파일을 생성하고 확인합니다.
 
 ```bash
-kubectl exec -n fa-test fa-test-pod -- \
+kubectl exec -n fa-test <POD_NAME> -- \
   sh -c 'echo "FlashArray volume test" > /data/test.txt'
-kubectl exec -n fa-test fa-test-pod -- cat /data/test.txt
+kubectl exec -n fa-test <POD_NAME> -- cat /data/test.txt
 ```
 
 3. Pod가 실행 중인 워커 노드에서 Multipath 장치를 확인합니다.
@@ -275,27 +274,35 @@ multipath -ll
 
 새 10GiB 장치가 여러 iSCSI 경로와 WWID 이름으로 표시되는지 확인합니다.
 
-4. Pod를 다시 생성한 뒤 데이터가 유지되는지 확인합니다.
+4. FlashArray 관리 화면의 **Storage > Hosts**에서 Portworx가 현재 Pod 실행 노드의 Host와 IQN 매핑을 자동으로 생성했는지 확인합니다.
+
+5. 현재 Pod가 실행 중인 노드를 스케줄링 대상에서 제외하고 Pod를 삭제합니다.
 
 ```bash
-kubectl delete pod -n fa-test fa-test-pod
-kubectl apply -f ~/flasharray-test-pod.yaml
-kubectl wait -n fa-test --for=condition=Ready \
-  pod/fa-test-pod --timeout=180s
-kubectl exec -n fa-test fa-test-pod -- cat /data/test.txt
+kubectl cordon <CURRENT_NODE>
+kubectl delete pod -n fa-test <POD_NAME>
+kubectl get pod -n fa-test -l app=fa-test -o wide -w
 ```
 
-### 선택 사항. 테스트 리소스 정리
+Deployment가 다른 워커 노드에 새 Pod를 생성할 때까지 기다린 뒤 `<NEW_POD_NAME>`과 새 노드를 확인합니다.
+
+> Note: RWO 볼륨은 한 번에 하나의 노드에만 연결됩니다. 기존 노드에서 볼륨을 분리하고 새 노드에 연결하는 동안 새 Pod가 잠시 `ContainerCreating` 상태로 표시될 수 있습니다.
+
+6. 새 Pod에서도 기존 데이터가 유지되는지 확인합니다.
 
 ```bash
-kubectl delete -f ~/flasharray-test-pod.yaml
-kubectl delete -f ~/flasharray-test.yaml
-kubectl delete -f ~/flasharray-sc.yaml
+kubectl exec -n fa-test <NEW_POD_NAME> -- cat /data/test.txt
 ```
 
-> Warning: `reclaimPolicy: Delete`이므로 PVC를 삭제하면 FlashArray의 테스트 볼륨도 삭제됩니다.
+7. FlashArray 관리 화면에서 기존 노드의 Host 매핑이 정리되고 새 노드의 Host와 IQN 매핑에 볼륨이 연결되었는지 확인합니다.
 
-> Note: FlashArray를 Portworx의 동적 백엔드로 사용할 때는 미리 만든 SAN 볼륨을 `pxctl service drive add`로 스토리지 풀에 직접 추가하지 않습니다.
+> Note: Portworx가 FlashArray Host와 IQN 매핑을 정리하더라도 워커 노드의 `/etc/iscsi/initiatorname.iscsi`에 저장된 IQN과 PVC 데이터는 삭제되지 않습니다.
+
+8. 실습을 마친 뒤 기존 노드를 다시 스케줄링할 수 있도록 설정합니다.
+
+```bash
+kubectl uncordon <CURRENT_NODE>
+```
 
 ## 참고 자료
 
