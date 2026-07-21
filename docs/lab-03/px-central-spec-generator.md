@@ -1,5 +1,8 @@
 # Lab 03. PX-Central을 이용한 Portworx Spec 생성
 
+이 LAB에서는 Portworx Central의 Spec Generator를 이용해 실습 환경에 맞는 Portworx 배포 사양을 생성합니다.
+쿠버네티스 버전, 디스크, 네트워크 및 주요 기능을 설정하고 다음 LAB에서 사용할 Spec을 저장합니다.
+
 ### Task 1. Portworx Central 계정 만들기
 
 1. 웹 브라우저에서 `central.portworx.com`에 접속하고 메인 화면에서 `Create account`를 선택하여 계정 생성 화면으로 이동합니다.
@@ -146,6 +149,12 @@
 <p align="center">
   <img src="images/image-16.png" alt="저장된 Portworx Spec 확인 화면">
 </p>
+
+## 참고 자료
+
+- [Portworx Enterprise 설치 개요](https://docs.portworx.com/portworx-enterprise/platform/install)
+- [Portworx Central을 이용한 Bare Metal Kubernetes 설치](https://docs.portworx.com/portworx-enterprise/platform/install/bare-metal/kubernetes-non-airgap/operator)
+- [StorageCluster CRD 레퍼런스](https://docs.portworx.com/portworx-enterprise/reference/crd/storage-cluster/)
 
 ---
 

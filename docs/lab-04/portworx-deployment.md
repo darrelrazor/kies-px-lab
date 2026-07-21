@@ -1,5 +1,8 @@
 # Lab 04. 쿠버네티스 클러스터에 Portworx 배포
 
+이 LAB에서는 Portworx Operator와 이전 LAB에서 만든 Spec을 사용해 쿠버네티스 클러스터에 Portworx를 배포합니다.
+배포된 구성 요소와 클러스터 상태를 확인하고 운영에 사용할 `pxctl` 및 `storkctl` 명령어 별칭을 등록합니다.
+
 ### Task 1. Portworx Operator 배포
 
 1. 마스터 노드에서 `px-operator`를 배포합니다.
@@ -123,6 +126,12 @@ storkctl1 version
 ```
 
 ![alt text](images/image-6.png)
+
+## 참고 자료
+
+- [Portworx Enterprise 설치 개요](https://docs.portworx.com/portworx-enterprise/platform/install)
+- [Bare Metal Kubernetes에 Portworx 설치](https://docs.portworx.com/portworx-enterprise/platform/install/bare-metal/kubernetes-non-airgap/operator)
+- [StorageCluster CRD 레퍼런스](https://docs.portworx.com/portworx-enterprise/reference/crd/storage-cluster/)
 
 ---
 

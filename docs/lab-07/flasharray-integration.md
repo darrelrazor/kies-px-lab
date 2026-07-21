@@ -1,6 +1,7 @@
 # Lab 07. Portworx와 Pure Storage FlashArray 연동
 
 이 LAB에서는 Portworx가 Pure Storage FlashArray에 볼륨을 동적으로 생성하도록 iSCSI, Multipath, Secret과 StorageClass를 구성합니다.
+FlashArray에 생성된 볼륨을 쿠버네티스 PVC와 Pod에 연결하고 데이터 입출력이 정상인지 확인합니다.
 
 > Note: 명령의 IP 주소, StorageCluster 이름과 API Token은 실습 환경의 값으로 변경합니다.
 
@@ -295,6 +296,12 @@ kubectl delete -f ~/flasharray-sc.yaml
 > Warning: `reclaimPolicy: Delete`이므로 PVC를 삭제하면 FlashArray의 테스트 볼륨도 삭제됩니다.
 
 > Note: FlashArray를 Portworx의 동적 백엔드로 사용할 때는 미리 만든 SAN 볼륨을 `pxctl service drive add`로 스토리지 풀에 직접 추가하지 않습니다.
+
+## 참고 자료
+
+- [Portworx와 Pure Storage FlashArray 연동](https://docs.portworx.com/portworx-enterprise/platform/install/pure-storage/flasharray)
+- [Pure FlashArray Direct Access Volume](https://docs.portworx.com/portworx-enterprise/provision-storage/create-pvcs/pure-flasharray)
+- [Portworx StorageClass 레퍼런스](https://docs.portworx.com/portworx-enterprise/reference/storageclass)
 
 ---
 

@@ -1,5 +1,8 @@
 # Lab 01. 쿠버네티스 클러스터 구성
 
+이 LAB에서는 마스터 노드 1대와 워커 노드 3대의 운영체제 및 네트워크를 설정하고, kubeadm을 이용해 쿠버네티스 클러스터를 구성합니다.
+Containerd와 Calico CNI를 설치한 뒤 모든 노드와 Pod가 정상 상태인지 확인합니다.
+
 ### Task 1. Lab 환경 확인
 
 1. 쿠버네티스 클러스터를 구성할 대상 노드와 IP 정보를 확인합니다.
@@ -295,6 +298,13 @@ kubectl get nodes
 > Note: 진행 과정을 모니터링하려면 `watch -n 1 kubectl get po -A`를 실행합니다.
 
 2. 모든 Pod가 `Running`, 모든 노드가 `Ready` 상태인지 확인합니다.
+
+## 참고 자료
+
+- [Kubernetes - kubeadm 설치](https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/install-kubeadm/)
+- [Kubernetes - kubeadm으로 클러스터 생성](https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/create-cluster-kubeadm/)
+- [Kubernetes - 컨테이너 런타임](https://kubernetes.io/docs/setup/production-environment/container-runtimes/)
+- [Calico - 온프레미스 Kubernetes 설치](https://docs.tigera.io/calico/latest/getting-started/kubernetes/self-managed-onprem/onpremises)
 
 ---
 

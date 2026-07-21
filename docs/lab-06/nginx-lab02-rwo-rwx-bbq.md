@@ -1,6 +1,7 @@
 # Lab 06. Dynamic Volume Provisioning
 
-
+이 LAB에서는 LAB 02의 NGINX에 Portworx RWO 영구 볼륨을 연결하고, Pod가 재생성되어도 데이터가 유지되는지 확인합니다.
+이후 별도의 RWX 공유 볼륨을 여러 NGINX Pod에서 함께 사용해 보고 Portworx BBQ 애플리케이션까지 배포합니다.
 
 ### Task 1. 기존 NGINX에 RWO 영구 볼륨 연결
 
@@ -556,6 +557,16 @@ watch -n 1 kubectl get pod portworx-bbq
 
 웹 페이지를 새로고침했을 때 데이터가 남아 있으면 MongoDB가 Portworx PVC를 정상적으로 사용하고 있는 것입니다.
 
+
+## 참고 자료
+
+- [Kubernetes - Dynamic Volume Provisioning](https://kubernetes.io/docs/concepts/storage/dynamic-provisioning/)
+- [Portworx - Dynamic Provisioning 기존 문서](https://docs.portworx.com/scheduler/kubernetes/dynamic-provisioning.html)
+- [Portworx StorageClass 레퍼런스](https://docs.portworx.com/portworx-enterprise/reference/storageclass)
+- [Portworx PVC 생성 및 관리](https://docs.portworx.com/portworx-enterprise/provision-storage/create-pvcs)
+- [Portworx Sharedv4 Volume 개념](https://docs.portworx.com/portworx-enterprise/concepts/shared-volumes)
+- [Portworx Sharedv4 PVC 생성](https://docs.portworx.com/portworx-enterprise/platform/provision-storage/create-pvcs/create-sharedv4-pvcs)
+- [SUSE Portworx BBQ Lab](https://opensource.suse.com/lab-setup/)
 
 ---
 

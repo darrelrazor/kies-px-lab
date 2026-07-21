@@ -1,5 +1,8 @@
 # Lab 02. 쿠버네티스 애플리케이션 및 네트워크 구성
 
+이 LAB에서는 테스트용 NGINX 애플리케이션을 배포하고, 외부에서 접속할 수 있도록 MetalLB와 NGINX Gateway Fabric을 구성합니다.
+Service와 HTTPRoute를 통해 요청이 NGINX Pod까지 전달되는 과정을 확인합니다.
+
 ### Task 9. 테스트용 NGINX 배포
 
 1. 네임스페이스를 생성합니다.
@@ -328,6 +331,14 @@ kubectl apply -f nginx-route.yaml
 
 
 ![alt text](images/image-22.png)
+
+## 참고 자료
+
+- [Helm 설치](https://helm.sh/docs/intro/install/)
+- [MetalLB 설치](https://metallb.io/installation/)
+- [MetalLB 구성](https://metallb.io/configuration/)
+- [NGINX Gateway Fabric - Helm 설치](https://docs.nginx.com/nginx-gateway-fabric/install/helm/)
+- [Gateway API - HTTP 라우팅](https://gateway-api.sigs.k8s.io/guides/http-routing/)
 
 ---
 
