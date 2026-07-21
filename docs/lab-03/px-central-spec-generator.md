@@ -96,6 +96,8 @@
 
 > Note: KVDB는 Portworx 클러스터 상태와 설정, 볼륨 및 스냅샷 메타데이터를 저장합니다. `Skip KVDB device`를 선택하면 데이터 디스크를 KVDB와 공유하므로 실습 환경에는 적합하지만 운영 환경에는 권장하지 않습니다. 운영 환경에서는 선택을 해제하고 3개 노드에 전용 KVDB 디스크를 구성합니다.
 
+> Note: 이 실습에서는 `PX-StoreV2`를 선택하지 않고 PX-StoreV1을 사용합니다. PX-StoreV1은 범용 환경을 위한 파일시스템 기반 데이터스토어이고, PX-StoreV2는 NVMe급 장치를 사용하는 고성능 I/O 환경에 최적화된 블록 기반 데이터스토어입니다. PX-StoreV2는 노드당 최소 8 CPU Core와 8GB RAM이 필요하며, Portworx 메타데이터를 저장할 64GB 이상의 사전 준비된 `Metadata Path`도 필요합니다. 현재 실습 환경은 워커 노드당 4 CPU Core와 50GB 데이터 디스크로 구성되어 PX-StoreV2의 최소 요구사항을 충족하지 않습니다. 이번 실습에서 확인할 기본 볼륨 생성, 연결 및 데이터 영속성 동작은 PX-StoreV1으로 동일하게 학습할 수 있으므로 PX-StoreV1을 사용합니다.
+
 
 ### Task 5. Spec Generator 고급 모드 - Network
 
@@ -155,6 +157,8 @@
 - [Portworx Enterprise 설치 개요](https://docs.portworx.com/portworx-enterprise/platform/install)
 - [Portworx Central을 이용한 Bare Metal Kubernetes 설치](https://docs.portworx.com/portworx-enterprise/platform/install/bare-metal/kubernetes-non-airgap/operator)
 - [StorageCluster CRD 레퍼런스](https://docs.portworx.com/portworx-enterprise/reference/crd/storage-cluster/)
+- [PX-StoreV1과 PX-StoreV2 비교](https://docs.portworx.com/portworx-enterprise/concepts/px-store-v2)
+- [Portworx 시스템 요구사항](https://docs.portworx.com/portworx-enterprise/platform/prerequisites)
 
 ---
 
